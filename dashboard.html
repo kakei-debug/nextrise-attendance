@@ -20,6 +20,7 @@
     </div>
     <nav id="nav-menu" class="nav-menu" hidden>
       <a href="dashboard.html" data-page="dashboard">勤怠打刻</a>
+      <a href="edit-request.html" data-page="editrequest">打刻修正申請</a>
       <a href="leave.html" data-page="leave">有給申請</a>
       <a href="expenses.html" data-page="expenses">交通費申請</a>
       <a href="admin.html" data-page="admin" id="nav-admin-link" hidden>管理メニュー</a>
@@ -41,49 +42,14 @@
     </div>
 
     <div class="hist-card">
-      <h4>直近の勤怠履歴</h4>
+      <div class="hist-head">
+        <h4>勤怠履歴</h4>
+        <input type="month" id="hist-month">
+      </div>
       <table>
         <thead><tr><th>日付</th><th>出勤</th><th>退勤</th></tr></thead>
         <tbody id="hist-body">
           <tr><td colspan="3" class="hist-empty">読み込み中...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="hist-card">
-      <h4>打刻修正を申請</h4>
-      <div class="card-body">
-        <p class="page-sub">出勤・退勤の打刻を押し忘れた、間違えた場合はこちらから修正を申請してください。総務・管理者の承認後に反映されます。</p>
-        <form id="edit-request-form">
-          <div class="form-row">
-            <div class="field">
-              <label for="er-date">対象日</label>
-              <input type="date" id="er-date" required>
-            </div>
-            <div class="field">
-              <label for="er-type">種別</label>
-              <select id="er-type" class="small-input" style="width:100%">
-                <option value="in">出勤</option>
-                <option value="out">退勤</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="er-time">正しい時刻</label>
-              <input type="time" id="er-time" required>
-            </div>
-          </div>
-          <div class="field">
-            <label for="er-reason">理由</label>
-            <input type="text" id="er-reason" placeholder="例：打刻を押し忘れました">
-          </div>
-          <p class="error" id="edit-request-error"></p>
-          <button type="submit" class="btn-secondary">申請する</button>
-        </form>
-      </div>
-      <table>
-        <thead><tr><th>対象日</th><th>種別</th><th>希望時刻</th><th>状態</th></tr></thead>
-        <tbody id="edit-request-body">
-          <tr><td colspan="4" class="hist-empty">読み込み中...</td></tr>
         </tbody>
       </table>
     </div>

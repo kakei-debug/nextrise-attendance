@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>有給申請 | ネクストライズ株式会社 勤怠管理システム</title>
+<title>打刻修正申請 | ネクストライズ株式会社 勤怠管理システム</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,49 +29,46 @@
   </header>
 
   <main class="page-body">
-    <h1 class="page-title">有給申請</h1>
-    <p class="page-sub">申請すると同じ部署のメンバーに表示され、承認・却下してもらえます。残日数は総務にお問い合わせください。</p>
+    <h1 class="page-title">打刻修正申請</h1>
+    <p class="page-sub">出勤・退勤の打刻を押し忘れた、間違えた場合はこちらから修正を申請してください。総務の承認後に反映されます。</p>
 
     <div class="hist-card">
-      <h4>新しく申請する</h4>
+      <h4>修正を申請する</h4>
       <div class="card-body">
-        <form id="leave-form">
+        <form id="edit-request-form">
           <div class="form-row">
             <div class="field">
-              <label for="lv-start">開始日</label>
-              <input type="date" id="lv-start" required>
+              <label for="er-date">対象日</label>
+              <input type="date" id="er-date" required>
             </div>
             <div class="field">
-              <label for="lv-end">終了日</label>
-              <input type="date" id="lv-end" required>
+              <label for="er-type">種別</label>
+              <select id="er-type" class="small-input" style="width:100%">
+                <option value="in">出勤</option>
+                <option value="out">退勤</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="er-time">正しい時刻</label>
+              <input type="time" id="er-time" required>
             </div>
           </div>
           <div class="field">
-            <label for="lv-reason">理由（任意）</label>
-            <input type="text" id="lv-reason" placeholder="例：私用のため">
+            <label for="er-reason">理由</label>
+            <input type="text" id="er-reason" placeholder="例：打刻を押し忘れました">
           </div>
-          <p class="error" id="leave-error"></p>
+          <p class="error" id="edit-request-error"></p>
           <button type="submit" class="btn-primary" style="max-width:200px">申請する</button>
         </form>
       </div>
     </div>
 
     <div class="hist-card">
-      <h4>自分の申請履歴</h4>
+      <h4>申請履歴</h4>
       <table>
-        <thead><tr><th>期間</th><th>日数</th><th>理由</th><th>状態</th></tr></thead>
-        <tbody id="my-leave-body">
+        <thead><tr><th>対象日</th><th>種別</th><th>希望時刻</th><th>状態</th></tr></thead>
+        <tbody id="edit-request-body">
           <tr><td colspan="4" class="hist-empty">読み込み中...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="hist-card">
-      <h4>同じ部署の申請</h4>
-      <table>
-        <thead><tr><th>申請者</th><th>期間</th><th>日数</th><th>状態</th><th></th></tr></thead>
-        <tbody id="dept-leave-body">
-          <tr><td colspan="5" class="hist-empty">読み込み中...</td></tr>
         </tbody>
       </table>
     </div>
@@ -81,6 +78,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="common.js"></script>
-<script src="leave.js"></script>
+<script src="edit-request.js"></script>
 </body>
 </html>
