@@ -1,3 +1,4 @@
+let currentUser = null;
 let currentProfile = null;
 let rowSeq = 0;
 
@@ -19,6 +20,10 @@ function addRow(date, route, amount) {
   tr.querySelectorAll("input").forEach((input) => input.addEventListener("input", updateTotal));
 }
 
+function clearRows() {
+  document.getElementById("exp-body").innerHTML = "";
+}
+
 function updateTotal() {
   let total = 0;
   document.querySelectorAll(".exp-amount").forEach((input) => {
@@ -38,18 +43,71 @@ function collectRows() {
   return rows;
 }
 
-async function init() {
-  const ctx = await initPage("expenses");
-  if (!ctx) return;
-  currentProfile = ctx.profile;
+async function loadMonth() {
+  const monthVal = document.getElementById("exp-month").value;
+  const { data, error } = await supabaseClient
+    .from("expense_items")
+    .select("item_date, route, amount")
+    .eq("employee_id", currentUser.id)
+    .eq("claim_month", monthVal)
+    .order("item_date", { ascending: true });
 
-  document.getElementById("exp-month").value = new Date().toISOString().slice(0, 7);
-
-  for (let i = 0; i < 3; i++) addRow();
+  clearRows();
+  if (!error && data && data.length > 0) {
+    data.forEach((r) => addRow(r.item_date, r.route, r.amount));
+  } else {
+    for (let i = 0; i < 3; i++) addRow();
+  }
   updateTotal();
 }
 
+async function saveRows() {
+  const statusEl = document.getElementById("exp-save-status");
+  statusEl.textContent = "";
+  statusEl.style.color = "";
+
+  const monthVal = document.getElementById("exp-month").value;
+  const rows = collectRows();
+
+  await supabaseClient.from("expense_items").delete().eq("employee_id", currentUser.id).eq("claim_month", monthVal);
+
+  if (rows.length > 0) {
+    const payload = rows.map((r) => ({
+      employee_id: currentUser.id,
+      claim_month: monthVal,
+      item_date: r.date || null,
+      route: r.route,
+      amount: r.amount,
+    }));
+    const { error } = await supabaseClient.from("expense_items").insert(payload);
+    if (error) {
+      statusEl.style.color = "#c0392b";
+      statusEl.textContent = "保存に失敗しました：" + error.message;
+      return false;
+    }
+  }
+
+  statusEl.style.color = "#1f8a53";
+  statusEl.textContent = "保存しました";
+  return true;
+}
+
+async function init() {
+  const ctx = await initPage("expenses");
+  if (!ctx) return;
+  currentUser = ctx.user;
+  currentProfile = ctx.profile;
+
+  const monthInput = document.getElementById("exp-month");
+  monthInput.value = new Date().toISOString().slice(0, 7);
+  monthInput.addEventListener("change", loadMonth);
+
+  await loadMonth();
+}
+
 document.getElementById("exp-add-row").addEventListener("click", () => addRow());
+
+document.getElementById("exp-save").addEventListener("click", () => saveRows());
 
 document.getElementById("exp-export").addEventListener("click", async () => {
   const rows = collectRows();
@@ -57,6 +115,8 @@ document.getElementById("exp-export").addEventListener("click", async () => {
     alert("最低1行、日付・区間・金額を入力してください。");
     return;
   }
+
+  await saveRows();
 
   const monthVal = document.getElementById("exp-month").value; // "2026-08"
   const monthNum = monthVal ? Number(monthVal.split("-")[1]) : new Date().getMonth() + 1;

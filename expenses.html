@@ -24,8 +24,15 @@
   #print-area{position:fixed;top:-99999px;left:0;width:794px;background:#fff;padding:48px;font-family:"Hiragino Mincho ProN","Hiragino Sans",serif;color:#1b2230;}
   #print-area .p-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;}
   #print-area h2{font-size:22px;margin:0;letter-spacing:.05em;}
-  #print-area .p-seals{display:flex;gap:10px;}
-  #print-area .p-seal{width:64px;height:64px;border:1.5px solid #999;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#888;}
+  #print-area .p-seals{display:flex;gap:8px;}
+  #print-area .p-seal{
+    width:64px;height:84px;border:1.5px solid #999;border-radius:2px;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  #print-area .p-seal span{
+    width:100%;text-align:center;font-size:10.5px;color:#666;
+    padding:4px 0;border-bottom:1px solid #ccc;letter-spacing:.05em;
+  }
   #print-area .p-meta{display:flex;gap:36px;margin-bottom:20px;font-size:13px;}
   #print-area .p-meta div span{display:block;font-size:10.5px;color:#8a92a0;margin-bottom:2px;}
   #print-area table{width:100%;border-collapse:collapse;font-size:12.5px;}
@@ -59,7 +66,7 @@
 
   <main class="page-body">
     <h1 class="page-title">交通費申請</h1>
-    <p class="page-sub">日付・区間・金額を入力し、「PDFを出力する」を押すとその場でPDFがダウンロードされます（この画面のデータは保存されません）。</p>
+    <p class="page-sub">日付・区間・金額を入力すると記録として保存されます。「PDFを出力する」を押すとその場でPDFもダウンロードされます。</p>
 
     <div class="hist-card">
       <div class="card-body" style="padding-bottom:0;">
@@ -80,6 +87,8 @@
       </div>
 
       <div class="exp-actions">
+        <span class="error" id="exp-save-status"></span>
+        <button type="button" id="exp-save" class="btn-secondary">保存する</button>
         <button type="button" id="exp-export" class="btn-primary" style="max-width:220px;">PDFを出力する</button>
       </div>
     </div>
@@ -90,8 +99,8 @@
   <div class="p-head">
     <h2 id="p-title">8月分交通費</h2>
     <div class="p-seals">
-      <div class="p-seal">承認</div>
-      <div class="p-seal">確認</div>
+      <div class="p-seal"><span>承認印</span></div>
+      <div class="p-seal"><span>確認印</span></div>
     </div>
   </div>
   <div class="p-meta">
