@@ -176,13 +176,6 @@ body{
 .hist-empty{text-align:center;color:#9aa4b2;padding:22px;}
 .hist-card .card-body{padding:18px 20px;}
 
-.leave-summary{display:flex;gap:16px;}
-.leave-stat{
-  flex:1;text-align:center;background:#f4f6f9;border-radius:10px;padding:16px 10px;
-}
-.leave-stat-label{display:block;font-size:11px;color:var(--text-dim);margin-bottom:6px;letter-spacing:.02em;}
-.leave-stat-val{font-size:24px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;}
-
 /* ---------- フォーム系ページ共通（有給申請・交通費・管理者） ---------- */
 .page-body{max-width:760px;margin:0 auto;padding:28px 20px 80px;}
 .page-title{font-size:18px;font-weight:700;margin:0 0 4px;}

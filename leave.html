@@ -21,8 +21,8 @@
     <nav id="nav-menu" class="nav-menu" hidden>
       <a href="dashboard.html" data-page="dashboard">勤怠打刻</a>
       <a href="edit-request.html" data-page="editrequest">打刻修正申請</a>
-      <a href="leave.html" data-page="leave">有給申請</a>
       <a href="expenses.html" data-page="expenses">交通費申請</a>
+      <a href="leave.html" data-page="leave">有給申請</a>
       <a href="admin.html" data-page="admin" id="nav-admin-link" hidden>管理メニュー</a>
       <button id="logout-btn" class="nav-logout">ログアウト</button>
     </nav>
@@ -31,15 +31,6 @@
   <main class="page-body">
     <h1 class="page-title">有給申請</h1>
     <p class="page-sub">申請すると同じ部署のメンバーに表示され、承認・却下してもらえます。</p>
-
-    <div class="hist-card">
-      <h4>自分の有給日数</h4>
-      <div class="card-body leave-summary">
-        <div class="leave-stat"><span class="leave-stat-label">付与日数</span><span class="leave-stat-val" id="lv-granted">-</span></div>
-        <div class="leave-stat"><span class="leave-stat-label">使用済み</span><span class="leave-stat-val" id="lv-used">-</span></div>
-        <div class="leave-stat"><span class="leave-stat-label">残り</span><span class="leave-stat-val" id="lv-remaining">-</span></div>
-      </div>
-    </div>
 
     <div class="hist-card">
       <h4>新しく申請する</h4>
@@ -75,6 +66,16 @@
         <thead><tr><th>申請者</th><th>申請予定日</th><th>日数</th><th>状態</th><th></th></tr></thead>
         <tbody id="dept-leave-body">
           <tr><td colspan="5" class="hist-empty">読み込み中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hist-card">
+      <h4>自分の有給日数</h4>
+      <table>
+        <thead><tr><th>付与日数</th><th>使用済み</th><th>残り</th></tr></thead>
+        <tbody>
+          <tr><td id="lv-granted">-</td><td id="lv-used">-</td><td id="lv-remaining">-</td></tr>
         </tbody>
       </table>
     </div>
