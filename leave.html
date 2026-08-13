@@ -30,7 +30,16 @@
 
   <main class="page-body">
     <h1 class="page-title">有給申請</h1>
-    <p class="page-sub">申請すると同じ部署のメンバーに表示され、承認・却下してもらえます。残日数は総務にお問い合わせください。</p>
+    <p class="page-sub">申請すると同じ部署のメンバーに表示され、承認・却下してもらえます。</p>
+
+    <div class="hist-card">
+      <h4>自分の有給日数</h4>
+      <div class="card-body leave-summary">
+        <div class="leave-stat"><span class="leave-stat-label">付与日数</span><span class="leave-stat-val" id="lv-granted">-</span></div>
+        <div class="leave-stat"><span class="leave-stat-label">使用済み</span><span class="leave-stat-val" id="lv-used">-</span></div>
+        <div class="leave-stat"><span class="leave-stat-label">残り</span><span class="leave-stat-val" id="lv-remaining">-</span></div>
+      </div>
+    </div>
 
     <div class="hist-card">
       <h4>新しく申請する</h4>

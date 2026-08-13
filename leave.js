@@ -17,8 +17,26 @@ async function init() {
   currentUser = ctx.user;
   currentProfile = ctx.profile;
 
+  await refreshMySummary();
   await refreshMyLeave();
   await refreshDeptLeave();
+}
+
+async function refreshMySummary() {
+  const granted = Number((currentProfile && currentProfile.leave_granted_days) || 0);
+
+  const { data: approved } = await supabaseClient
+    .from("leave_requests")
+    .select("days")
+    .eq("employee_id", currentUser.id)
+    .eq("status", "approved");
+
+  const used = (approved || []).reduce((sum, r) => sum + Number(r.days), 0);
+  const remaining = granted - used;
+
+  document.getElementById("lv-granted").textContent = granted + "日";
+  document.getElementById("lv-used").textContent = used + "日";
+  document.getElementById("lv-remaining").textContent = remaining + "日";
 }
 
 async function refreshMyLeave() {
@@ -86,6 +104,7 @@ async function refreshDeptLeave() {
         .eq("id", id);
       await refreshDeptLeave();
       await refreshMyLeave();
+      await refreshMySummary();
     });
   });
 }
