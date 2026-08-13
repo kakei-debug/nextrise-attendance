@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ログイン | ネクストライズ株式会社 勤怠管理システム</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <img src="assets/logo.png" alt="NEXTRISE" class="brand-logo">
+      <div>
+        <p class="brand-tag">勤怠管理システム</p>
+      </div>
+      <p class="brand-foot">&copy; NextRise Co., Ltd.</p>
+    </div>
+
+    <div class="auth-form-wrap">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-tab="login">ログイン</button>
+        <button type="button" class="auth-tab" data-tab="signup">新規登録</button>
+      </div>
+
+      <form id="login-form" class="auth-form">
+        <h3>ログイン</h3>
+        <p class="sub">メールアドレスと4桁のパスコードを入力してください</p>
+
+        <div class="field">
+          <label for="login-email">メールアドレス</label>
+          <input type="email" id="login-email" required autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label>パスコード（4桁）</label>
+          <div class="pin-row">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+          </div>
+        </div>
+
+        <p class="error" id="login-error"></p>
+        <button type="submit" class="btn-primary">ログイン</button>
+      </form>
+
+      <form id="signup-form" class="auth-form" hidden>
+        <h3>新規登録</h3>
+        <p class="sub">はじめてご利用の方はこちらから登録してください</p>
+
+        <div class="field">
+          <label for="signup-name">氏名</label>
+          <input type="text" id="signup-name" required>
+        </div>
+
+        <div class="field">
+          <label for="signup-dept">部署</label>
+          <input type="text" id="signup-dept" placeholder="例：賃貸管理部">
+        </div>
+
+        <div class="field">
+          <label for="signup-email">メールアドレス</label>
+          <input type="email" id="signup-email" required autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label>パスコード（4桁の数字）</label>
+          <div class="pin-row">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box">
+          </div>
+        </div>
+
+        <p class="error" id="signup-error"></p>
+        <button type="submit" class="btn-primary">登録する</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>
