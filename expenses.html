@@ -18,7 +18,13 @@
   .exp-toolbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;}
   .exp-total{font-size:13px;color:var(--text-dim);}
   .exp-total strong{color:var(--ink);font-size:16px;font-variant-numeric:tabular-nums;}
-  .exp-actions{display:flex;justify-content:flex-end;gap:10px;padding:16px 20px;}
+  .exp-actions{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;}
+  .exp-actions-left{display:flex;align-items:center;gap:12px;}
+  .btn-save{
+    background:#2563eb;color:#fff;border:none;border-radius:8px;
+    padding:11px 20px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  .btn-save:hover{background:#1d4ed8;}
 
   /* PDF出力用テンプレート（画面には表示しない） */
   #print-area{position:fixed;top:-99999px;left:0;width:794px;background:#fff;padding:48px;font-family:"Hiragino Mincho ProN","Hiragino Sans",serif;color:#1b2230;}
@@ -87,8 +93,10 @@
       </div>
 
       <div class="exp-actions">
-        <span class="error" id="exp-save-status"></span>
-        <button type="button" id="exp-save" class="btn-secondary">保存する</button>
+        <div class="exp-actions-left">
+          <button type="button" id="exp-save" class="btn-save">保存する</button>
+          <span class="error" id="exp-save-status"></span>
+        </div>
         <button type="button" id="exp-export" class="btn-primary" style="max-width:220px;">PDFを出力する</button>
       </div>
     </div>
