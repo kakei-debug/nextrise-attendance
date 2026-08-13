@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理メニュー | ネクストライズ株式会社 勤怠管理システム</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="dash-page">
+  <header class="dash-header">
+    <div class="dash-brand">
+      <img src="assets/logo.png" alt="NEXTRISE" class="brand-icon">
+      <span class="brand-sub">ネクストライズ株式会社</span>
+    </div>
+    <div class="dash-user">
+      <span id="user-name">-</span>
+      <span id="user-dept" class="user-dept"></span>
+      <button id="nav-toggle" class="nav-toggle" aria-label="メニュー">&#9776;</button>
+    </div>
+    <nav id="nav-menu" class="nav-menu" hidden>
+      <a href="dashboard.html" data-page="dashboard">勤怠打刻</a>
+      <a href="leave.html" data-page="leave">有給申請</a>
+      <a href="expenses.html" data-page="expenses">交通費申請</a>
+      <a href="admin.html" data-page="admin" id="nav-admin-link" hidden>管理メニュー</a>
+      <button id="logout-btn" class="nav-logout">ログアウト</button>
+    </nav>
+  </header>
+
+  <main class="page-body" style="max-width:920px;">
+    <h1 class="page-title">管理メニュー</h1>
+    <p class="page-sub" id="admin-role-note">総務・管理者向けのページです。</p>
+
+    <div class="hist-card">
+      <h4>打刻修正申請の承認</h4>
+      <table>
+        <thead><tr><th>申請者</th><th>対象日</th><th>種別</th><th>希望時刻</th><th>理由</th><th>状態</th><th></th></tr></thead>
+        <tbody id="edit-req-body">
+          <tr><td colspan="7" class="hist-empty">読み込み中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hist-card">
+      <h4>有給残日数の管理</h4>
+      <table>
+        <thead><tr><th>氏名</th><th>部署</th><th>付与日数</th><th>使用済み</th><th>残り</th><th></th></tr></thead>
+        <tbody id="leave-balance-body">
+          <tr><td colspan="6" class="hist-empty">読み込み中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hist-card" id="user-admin-card" hidden>
+      <h4>全社員一覧（管理者のみ）</h4>
+      <div class="card-body" style="padding-bottom:0;">
+        <p class="page-sub" style="margin:0 0 12px;">削除すると、その社員のプロフィール情報とアプリ内のデータへのアクセスができなくなります。ログインアカウント自体を完全に削除するには、Supabaseダッシュボードの「Authentication → Users」からも削除してください。</p>
+      </div>
+      <table>
+        <thead><tr><th>氏名</th><th>メール</th><th>部署</th><th>権限</th><th></th></tr></thead>
+        <tbody id="user-list-body">
+          <tr><td colspan="5" class="hist-empty">読み込み中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

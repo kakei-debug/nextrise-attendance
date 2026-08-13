@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交通費申請 | ネクストライズ株式会社 勤怠管理システム</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .exp-table{width:100%;border-collapse:collapse;}
+  .exp-table th{text-align:left;color:#8a92a0;font-weight:700;padding:8px 10px;font-size:11px;letter-spacing:.03em;}
+  .exp-table td{padding:6px 10px;}
+  .exp-table input{
+    width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 10px;
+    font-size:13px;color:var(--ink);background:#fbfcfd;font-family:inherit;
+  }
+  .exp-table input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(7,54,115,.12);}
+  .exp-remove{background:none;border:none;color:#a03434;cursor:pointer;font-size:16px;padding:4px 8px;}
+  .exp-toolbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;}
+  .exp-total{font-size:13px;color:var(--text-dim);}
+  .exp-total strong{color:var(--ink);font-size:16px;font-variant-numeric:tabular-nums;}
+  .exp-actions{display:flex;justify-content:flex-end;gap:10px;padding:16px 20px;}
+
+  /* PDF出力用テンプレート（画面には表示しない） */
+  #print-area{position:fixed;top:-99999px;left:0;width:794px;background:#fff;padding:48px;font-family:"Hiragino Mincho ProN","Hiragino Sans",serif;color:#1b2230;}
+  #print-area .p-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;}
+  #print-area h2{font-size:22px;margin:0;letter-spacing:.05em;}
+  #print-area .p-seals{display:flex;gap:10px;}
+  #print-area .p-seal{width:64px;height:64px;border:1.5px solid #999;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#888;}
+  #print-area .p-meta{display:flex;gap:36px;margin-bottom:20px;font-size:13px;}
+  #print-area .p-meta div span{display:block;font-size:10.5px;color:#8a92a0;margin-bottom:2px;}
+  #print-area table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  #print-area th{text-align:left;border-bottom:2px solid #1b2230;padding:8px 6px;font-size:11px;}
+  #print-area td{padding:8px 6px;border-bottom:1px solid #e4e7ec;}
+  #print-area .p-amount{text-align:right;font-variant-numeric:tabular-nums;}
+  #print-area .p-total-row td{border-top:2px solid #1b2230;border-bottom:none;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="dash-page">
+  <header class="dash-header">
+    <div class="dash-brand">
+      <img src="assets/logo.png" alt="NEXTRISE" class="brand-icon">
+      <span class="brand-sub">ネクストライズ株式会社</span>
+    </div>
+    <div class="dash-user">
+      <span id="user-name">-</span>
+      <span id="user-dept" class="user-dept"></span>
+      <button id="nav-toggle" class="nav-toggle" aria-label="メニュー">&#9776;</button>
+    </div>
+    <nav id="nav-menu" class="nav-menu" hidden>
+      <a href="dashboard.html" data-page="dashboard">勤怠打刻</a>
+      <a href="leave.html" data-page="leave">有給申請</a>
+      <a href="expenses.html" data-page="expenses">交通費申請</a>
+      <a href="admin.html" data-page="admin" id="nav-admin-link" hidden>管理メニュー</a>
+      <button id="logout-btn" class="nav-logout">ログアウト</button>
+    </nav>
+  </header>
+
+  <main class="page-body">
+    <h1 class="page-title">交通費申請</h1>
+    <p class="page-sub">日付・区間・金額を入力し、「PDFを出力する」を押すとその場でPDFがダウンロードされます（この画面のデータは保存されません）。</p>
+
+    <div class="hist-card">
+      <div class="card-body" style="padding-bottom:0;">
+        <div class="field" style="max-width:200px;">
+          <label for="exp-month">対象月</label>
+          <input type="month" id="exp-month">
+        </div>
+      </div>
+
+      <table class="exp-table">
+        <thead><tr><th style="width:130px;">日付</th><th>区間（駅・バス停など）</th><th style="width:120px;">金額（円）</th><th style="width:36px;"></th></tr></thead>
+        <tbody id="exp-body"></tbody>
+      </table>
+
+      <div class="exp-toolbar">
+        <button type="button" id="exp-add-row" class="btn-secondary">＋ 行を追加</button>
+        <div class="exp-total">合計　<strong id="exp-total">¥0</strong></div>
+      </div>
+
+      <div class="exp-actions">
+        <button type="button" id="exp-export" class="btn-primary" style="max-width:220px;">PDFを出力する</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="print-area">
+  <div class="p-head">
+    <h2 id="p-title">8月分交通費</h2>
+    <div class="p-seals">
+      <div class="p-seal">承認</div>
+      <div class="p-seal">確認</div>
+    </div>
+  </div>
+  <div class="p-meta">
+    <div><span>氏名</span><strong id="p-name">-</strong></div>
+    <div><span>部署</span><strong id="p-dept">-</strong></div>
+  </div>
+  <table>
+    <thead><tr><th style="width:110px;">日付</th><th>区間</th><th style="width:110px;" class="p-amount">金額</th></tr></thead>
+    <tbody id="p-body"></tbody>
+    <tfoot><tr class="p-total-row"><td colspan="2">合計</td><td class="p-amount" id="p-total">¥0</td></tr></tfoot>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="expenses.js"></script>
+</body>
+</html>

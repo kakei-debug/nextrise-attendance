@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有給申請 | ネクストライズ株式会社 勤怠管理システム</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="dash-page">
+  <header class="dash-header">
+    <div class="dash-brand">
+      <img src="assets/logo.png" alt="NEXTRISE" class="brand-icon">
+      <span class="brand-sub">ネクストライズ株式会社</span>
+    </div>
+    <div class="dash-user">
+      <span id="user-name">-</span>
+      <span id="user-dept" class="user-dept"></span>
+      <button id="nav-toggle" class="nav-toggle" aria-label="メニュー">&#9776;</button>
+    </div>
+    <nav id="nav-menu" class="nav-menu" hidden>
+      <a href="dashboard.html" data-page="dashboard">勤怠打刻</a>
+      <a href="leave.html" data-page="leave">有給申請</a>
+      <a href="expenses.html" data-page="expenses">交通費申請</a>
+      <a href="admin.html" data-page="admin" id="nav-admin-link" hidden>管理メニュー</a>
+      <button id="logout-btn" class="nav-logout">ログアウト</button>
+    </nav>
+  </header>
+
+  <main class="page-body">
+    <h1 class="page-title">有給申請</h1>
+    <p class="page-sub">申請すると同じ部署のメンバーに表示され、承認・却下してもらえます。残日数は総務にお問い合わせください。</p>
+
+    <div class="hist-card">
+      <h4>新しく申請する</h4>
+      <div class="card-body">
+        <form id="leave-form">
+          <div class="form-row">
+            <div class="field">
+              <label for="lv-start">開始日</label>
+              <input type="date" id="lv-start" required>
+            </div>
+            <div class="field">
+              <label for="lv-end">終了日</label>
+              <input type="date" id="lv-end" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="lv-reason">理由（任意）</label>
+            <input type="text" id="lv-reason" placeholder="例：私用のため">
+          </div>
+          <p class="error" id="leave-error"></p>
+          <button type="submit" class="btn-primary" style="max-width:200px">申請する</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="hist-card">
+      <h4>自分の申請履歴</h4>
+      <table>
+        <thead><tr><th>期間</th><th>日数</th><th>理由</th><th>状態</th></tr></thead>
+        <tbody id="my-leave-body">
+          <tr><td colspan="4" class="hist-empty">読み込み中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hist-card">
+      <h4>同じ部署の申請</h4>
+      <table>
+        <thead><tr><th>申請者</th><th>期間</th><th>日数</th><th>状態</th><th></th></tr></thead>
+        <tbody id="dept-leave-body">
+          <tr><td colspan="5" class="hist-empty">読み込み中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script src="leave.js"></script>
+</body>
+</html>

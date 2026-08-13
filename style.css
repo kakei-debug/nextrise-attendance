@@ -91,6 +91,7 @@ body{
 .dash-header{
   background:var(--navy);color:#fff;padding:16px 28px;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  position:relative;
 }
 .dash-brand{display:flex;align-items:center;gap:10px;}
 .brand-icon{width:26px;height:auto;}
@@ -103,6 +104,29 @@ body{
   padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;
 }
 .btn-ghost:hover{background:rgba(255,255,255,.1);}
+
+.nav-toggle{
+  background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;
+  width:34px;height:34px;border-radius:7px;cursor:pointer;font-size:16px;line-height:1;
+}
+.nav-toggle:hover{background:rgba(255,255,255,.1);}
+.nav-menu{
+  position:absolute;top:calc(100% + 6px);right:28px;
+  background:#fff;border-radius:10px;overflow:hidden;
+  box-shadow:0 12px 32px -12px rgba(7,54,115,.4);
+  display:flex;flex-direction:column;min-width:180px;z-index:20;
+}
+.nav-menu a{
+  padding:12px 18px;font-size:13px;color:var(--ink);text-decoration:none;
+  border-bottom:1px solid var(--border);
+}
+.nav-menu a:hover{background:#f4f6f9;}
+.nav-menu a.current{color:var(--navy);font-weight:700;background:#eef2f8;}
+.nav-menu .nav-logout{
+  padding:12px 18px;font-size:13px;color:#c0392b;background:#fff;border:none;
+  text-align:left;cursor:pointer;font-family:inherit;
+}
+.nav-menu .nav-logout:hover{background:#fdf1ef;}
 
 .dash-body{max-width:720px;margin:0 auto;padding:28px 20px 60px;}
 
@@ -140,3 +164,39 @@ body{
 .hist-card td{padding:11px 20px;color:#3a4250;border-top:1px solid #f0f2f5;font-variant-numeric:tabular-nums;}
 .hist-card tr:nth-child(even) td{background:#fafbfc;}
 .hist-empty{text-align:center;color:#9aa4b2;padding:22px;}
+.hist-card .card-body{padding:18px 20px;}
+
+/* ---------- フォーム系ページ共通（有給申請・交通費・管理者） ---------- */
+.page-body{max-width:760px;margin:0 auto;padding:28px 20px 80px;}
+.page-title{font-size:18px;font-weight:700;margin:0 0 4px;}
+.page-sub{font-size:12.5px;color:var(--text-dim);margin:0 0 20px;}
+
+.form-row{display:flex;gap:14px;flex-wrap:wrap;}
+.form-row .field{flex:1;min-width:140px;}
+
+.btn-secondary{
+  background:#eef1f6;color:var(--navy);border:none;border-radius:8px;
+  padding:10px 16px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.btn-secondary:hover{background:#e4e9f1;}
+
+.badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:20px;
+}
+.badge-pending{color:#8a6d1f;background:#fbf1d7;}
+.badge-approved{color:var(--success);background:var(--success-bg);}
+.badge-rejected{color:#a03434;background:#fbe6e4;}
+
+.btn-approve, .btn-reject{
+  border:none;border-radius:6px;padding:7px 12px;font-size:11.5px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+}
+.btn-approve{background:var(--success);color:#fff;}
+.btn-reject{background:#fff;color:#a03434;border:1px solid #e3b3ac;}
+.btn-approve:disabled, .btn-reject:disabled{opacity:.4;cursor:not-allowed;}
+
+.small-input{
+  border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12px;
+  color:var(--ink);background:#fbfcfd;font-family:inherit;width:80px;
+}
