@@ -6,7 +6,10 @@ const STATUS_BADGE = { pending: "badge-pending", approved: "badge-approved", rej
 const ROLE_LABEL = { admin: "管理者", soumu: "総務", employee: "一般社員" };
 
 function combineDateTimeToISO(logDate, timeStr) {
-  return new Date(`${logDate}T${timeStr}:00`).toISOString();
+  // Supabase の time 型は "18:30:00" のように秒付きで返るため、
+  // "HH:MM" 形式（秒なし）の場合だけ ":00" を補う
+  const t = timeStr.length === 5 ? timeStr + ":00" : timeStr;
+  return new Date(`${logDate}T${t}`).toISOString();
 }
 
 async function init() {
