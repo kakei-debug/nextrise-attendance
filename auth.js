@@ -9,21 +9,11 @@ document.querySelectorAll(".auth-tab").forEach((tab) => {
   });
 });
 
-// 4桁パスコード入力ボックス（自動で次の枠に移動）
-function wirePinInputs(formEl) {
-  const boxes = formEl.querySelectorAll(".pin-box");
-  boxes.forEach((box, i) => {
-    box.addEventListener("input", () => {
-      box.value = box.value.replace(/[^0-9]/g, "").slice(0, 1);
-      if (box.value && boxes[i + 1]) boxes[i + 1].focus();
-    });
-    box.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !box.value && boxes[i - 1]) boxes[i - 1].focus();
-    });
+// パスコード欄は数字のみ・4桁までに制限する
+function wirePinInput(inputEl) {
+  inputEl.addEventListener("input", () => {
+    inputEl.value = inputEl.value.replace(/[^0-9]/g, "").slice(0, 4);
   });
-}
-function readPin(formEl) {
-  return Array.from(formEl.querySelectorAll(".pin-box")).map((b) => b.value).join("");
 }
 
 // SupabaseのAuthは6文字未満のパスワードを許可しないため、
@@ -34,8 +24,8 @@ function pinToPassword(pin) {
 
 const loginForm = document.getElementById("login-form");
 const signupForm = document.getElementById("signup-form");
-wirePinInputs(loginForm);
-wirePinInputs(signupForm);
+wirePinInput(document.getElementById("login-pin"));
+wirePinInput(document.getElementById("signup-pin"));
 
 // ログイン
 loginForm.addEventListener("submit", async (e) => {
@@ -44,7 +34,7 @@ loginForm.addEventListener("submit", async (e) => {
   errorEl.textContent = "";
 
   const email = document.getElementById("login-email").value.trim();
-  const pin = readPin(loginForm);
+  const pin = document.getElementById("login-pin").value;
   if (pin.length !== 4) {
     errorEl.textContent = "4桁のパスコードを入力してください。";
     return;
@@ -68,7 +58,7 @@ signupForm.addEventListener("submit", async (e) => {
   const fullName = document.getElementById("signup-name").value.trim();
   const department = document.getElementById("signup-dept").value.trim();
   const email = document.getElementById("signup-email").value.trim();
-  const pin = readPin(signupForm);
+  const pin = document.getElementById("signup-pin").value;
 
   if (pin.length !== 4) {
     errorEl.textContent = "4桁のパスコードを入力してください。";

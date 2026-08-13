@@ -22,37 +22,38 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* ---------- ログイン / 新規登録 ---------- */
+/* ---------- ログイン / 新規登録（PCフル画面） ---------- */
 .auth-page{
-  min-height:100vh;
-  display:flex;align-items:center;justify-content:center;
-  padding:24px;
+  height:100vh;
+  overflow:hidden;
 }
 .auth-card{
-  width:100%;max-width:760px;min-height:480px;
-  background:var(--white);border-radius:16px;overflow:hidden;
-  display:grid;grid-template-columns:1fr 1.2fr;
-  box-shadow:0 20px 50px -20px rgba(7,54,115,.35);
+  width:100%;height:100%;
+  background:var(--white);
+  display:grid;grid-template-columns:1fr 1.3fr;
 }
-@media (max-width:640px){ .auth-card{grid-template-columns:1fr;} }
 
 .auth-brand{
   background:linear-gradient(160deg,#0a2e56 0%,#073673 55%,#0d4488 100%);
-  position:relative;color:#fff;padding:34px 30px;
+  position:relative;color:#fff;padding:60px;
   display:flex;flex-direction:column;justify-content:space-between;
 }
 .auth-brand::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(115deg,transparent 40%,rgba(194,154,95,.35) 41%,rgba(194,154,95,.35) 42%,transparent 43%);
 }
-.brand-logo{width:104px;height:auto;position:relative;}
+.brand-logo{width:132px;height:auto;position:relative;}
 .brand-tag{
-  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(255,255,255,.65);margin:16px 0 0;position:relative;
+  font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.65);margin:18px 0 0;position:relative;
 }
-.brand-foot{font-size:10.5px;color:rgba(255,255,255,.55);letter-spacing:.05em;position:relative;}
+.brand-foot{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.05em;position:relative;}
 
-.auth-form-wrap{padding:38px 36px;display:flex;flex-direction:column;justify-content:center;}
+.auth-form-wrap{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px;
+}
+.auth-form-wrap > *{width:100%;max-width:380px;}
 .auth-tabs{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-bottom:26px;}
 .auth-tab{
   background:none;border:none;cursor:pointer;padding:10px 2px 12px;
@@ -67,19 +68,13 @@ body{
 .field{margin-bottom:16px;}
 .field label{display:block;font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:6px;letter-spacing:.02em;}
 .field input[type="text"],
-.field input[type="email"]{
+.field input[type="email"],
+.field input[type="password"]{
   width:100%;border:1px solid var(--border);border-radius:8px;padding:11px 13px;
   font-size:13.5px;color:var(--ink);background:#fbfcfd;font-family:inherit;
+  letter-spacing:.04em;
 }
 .field input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(7,54,115,.12);}
-
-.pin-row{display:flex;gap:9px;}
-.pin-box{
-  width:100%;text-align:center;font-size:18px;letter-spacing:0;
-  padding:11px 0;border:1px solid var(--border);border-radius:8px;
-  color:var(--ink);background:#fbfcfd;font-family:inherit;
-}
-.pin-box:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(7,54,115,.12);}
 
 .btn-primary{
   width:100%;margin-top:6px;border:none;border-radius:8px;padding:12px;
