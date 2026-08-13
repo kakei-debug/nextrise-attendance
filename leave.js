@@ -4,13 +4,6 @@ let currentProfile = null;
 const STATUS_LABEL = { pending: "申請中", approved: "承認済み", rejected: "却下" };
 const STATUS_BADGE = { pending: "badge-pending", approved: "badge-approved", rejected: "badge-rejected" };
 
-function daysBetween(startStr, endStr) {
-  const start = new Date(startStr);
-  const end = new Date(endStr);
-  const diff = Math.round((end - start) / (24 * 60 * 60 * 1000)) + 1;
-  return diff > 0 ? diff : 1;
-}
-
 async function init() {
   const ctx = await initPage("leave");
   if (!ctx) return;
@@ -114,27 +107,20 @@ document.getElementById("leave-form").addEventListener("submit", async (e) => {
   const errorEl = document.getElementById("leave-error");
   errorEl.textContent = "";
 
-  const start_date = document.getElementById("lv-start").value;
-  const end_date = document.getElementById("lv-end").value;
+  const date = document.getElementById("lv-date").value;
   const reason = document.getElementById("lv-reason").value.trim();
 
-  if (!start_date || !end_date) {
-    errorEl.textContent = "開始日と終了日を入力してください。";
+  if (!date) {
+    errorEl.textContent = "申請予定日を入力してください。";
     return;
   }
-  if (end_date < start_date) {
-    errorEl.textContent = "終了日は開始日以降にしてください。";
-    return;
-  }
-
-  const days = daysBetween(start_date, end_date);
 
   const { error } = await supabaseClient.from("leave_requests").insert({
     employee_id: currentUser.id,
     department: currentProfile.department,
-    start_date,
-    end_date,
-    days,
+    start_date: date,
+    end_date: date,
+    days: 1,
     reason,
   });
 
