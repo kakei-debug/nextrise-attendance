@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>管理メニュー | ネクストライズ株式会社 勤怠管理システム</title>
 <link rel="stylesheet" href="style.css">
+<style>
+  #att-print-area{position:fixed;top:-99999px;left:0;width:794px;background:#fff;padding:48px;font-family:"Hiragino Mincho ProN","Hiragino Sans",serif;color:#1b2230;}
+  #att-print-area h2{font-size:22px;margin:0 0 24px;letter-spacing:.05em;}
+  #att-print-area .ap-meta{display:flex;gap:36px;margin-bottom:20px;font-size:13px;}
+  #att-print-area .ap-meta div span{display:block;font-size:10.5px;color:#8a92a0;margin-bottom:2px;}
+  #att-print-area table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  #att-print-area th{text-align:left;border-bottom:2px solid #1b2230;padding:8px 6px;font-size:11px;}
+  #att-print-area td{padding:7px 6px;border-bottom:1px solid #e4e7ec;}
+</style>
 </head>
 <body>
 <div class="dash-page">
@@ -54,6 +63,7 @@
           <input type="month" id="att-month">
         </div>
         <button type="button" id="att-csv-export" class="btn-secondary">CSVでダウンロード</button>
+        <button type="button" id="att-pdf-export" class="btn-secondary">PDFで出力</button>
       </div>
       <table>
         <thead><tr><th>日付</th><th>出勤</th><th>退勤</th></tr></thead>
@@ -88,9 +98,23 @@
   </main>
 </div>
 
+<div id="att-print-area">
+  <h2 id="ap-title">8月分勤怠表</h2>
+  <div class="ap-meta">
+    <div><span>氏名</span><strong id="ap-name">-</strong></div>
+    <div><span>部署</span><strong id="ap-dept">-</strong></div>
+  </div>
+  <table>
+    <thead><tr><th style="width:160px;">日付</th><th>出勤</th><th>退勤</th></tr></thead>
+    <tbody id="ap-body"></tbody>
+  </table>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

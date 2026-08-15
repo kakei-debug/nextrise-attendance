@@ -148,6 +148,60 @@ document.getElementById("att-csv-export").addEventListener("click", () => {
   URL.revokeObjectURL(url);
 });
 
+document.getElementById("att-pdf-export").addEventListener("click", async () => {
+  if (currentAttendanceRows.length === 0) {
+    alert("社員と対象月を選択し、記録がある状態でお試しください。");
+    return;
+  }
+  const monthVal = document.getElementById("att-month").value;
+  const monthNum = monthVal ? Number(monthVal.split("-")[1]) : new Date().getMonth() + 1;
+  const match = currentAttendanceEmployeeName.match(/^(.*)（(.*)）$/);
+  const name = match ? match[1] : currentAttendanceEmployeeName;
+  const dept = match ? match[2] : "-";
+
+  document.getElementById("ap-title").textContent = monthNum + "月分勤怠表";
+  document.getElementById("ap-name").textContent = name;
+  document.getElementById("ap-dept").textContent = dept;
+  document.getElementById("ap-body").innerHTML = currentAttendanceRows
+    .map((r) => `<tr><td>${r.date}（${r.weekday}）</td><td>${r.in || "-"}</td><td>${r.out || "-"}</td></tr>`)
+    .join("");
+
+  const printArea = document.getElementById("att-print-area");
+  const canvas = await html2canvas(printArea, { scale: 2 });
+  const imgData = canvas.toDataURL("image/png");
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+  if (imgHeight <= pageHeight) {
+    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, imgHeight);
+  } else {
+    // 1ページに収まらない場合はページを分けて出力する
+    let remaining = canvas.height;
+    let position = 0;
+    const pageCanvasHeight = Math.floor((pageHeight * canvas.width) / pageWidth);
+    while (remaining > 0) {
+      const sliceHeight = Math.min(pageCanvasHeight, remaining);
+      const pageCanvas = document.createElement("canvas");
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = sliceHeight;
+      pageCanvas
+        .getContext("2d")
+        .drawImage(canvas, 0, position, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+      const sliceData = pageCanvas.toDataURL("image/png");
+      if (position > 0) pdf.addPage();
+      pdf.addImage(sliceData, "PNG", 0, 0, pageWidth, (sliceHeight * pageWidth) / canvas.width);
+      position += sliceHeight;
+      remaining -= sliceHeight;
+    }
+  }
+
+  pdf.save(`勤怠_${currentAttendanceEmployeeName}_${monthVal}.pdf`);
+});
+
 async function refreshEditRequests() {
   const { data: rows, error } = await supabaseClient
     .from("attendance_edit_requests")
