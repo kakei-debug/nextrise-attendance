@@ -5,6 +5,10 @@ const STATUS_LABEL = { pending: "申請中", approved: "承認済み", rejected:
 const STATUS_BADGE = { pending: "badge-pending", approved: "badge-approved", rejected: "badge-rejected" };
 const ROLE_LABEL = { admin: "管理者", soumu: "総務", employee: "一般社員" };
 
+function pad(n) {
+  return String(n).padStart(2, "0");
+}
+
 function combineDateTimeToISO(logDate, timeStr) {
   // Supabase の time 型は "18:30:00" のように秒付きで返るため、
   // "HH:MM" 形式（秒なし）の場合だけ ":00" を補う
@@ -31,9 +35,118 @@ async function init() {
   document.getElementById("user-admin-card").hidden = currentProfile.role !== "admin";
 
   await refreshEditRequests();
+  await populateEmployeeSelect();
   await refreshLeaveBalances();
   if (currentProfile.role === "admin") await refreshUserList();
 }
+
+let currentAttendanceRows = [];
+let currentAttendanceEmployeeName = "";
+
+async function populateEmployeeSelect() {
+  const { data: rows, error } = await supabaseClient
+    .from("profiles")
+    .select("id, full_name, department")
+    .order("department");
+
+  const select = document.getElementById("att-employee-select");
+  if (error || !rows || rows.length === 0) {
+    select.innerHTML = '<option value="">社員が見つかりません</option>';
+    return;
+  }
+
+  select.innerHTML =
+    '<option value="">選択してください</option>' +
+    rows
+      .map((p) => `<option value="${p.id}">${p.full_name || "-"}（${p.department || "-"}）</option>`)
+      .join("");
+
+  document.getElementById("att-month").value = new Date().toISOString().slice(0, 7);
+
+  select.addEventListener("change", refreshEmployeeAttendance);
+  document.getElementById("att-month").addEventListener("change", refreshEmployeeAttendance);
+}
+
+async function refreshEmployeeAttendance() {
+  const select = document.getElementById("att-employee-select");
+  const employeeId = select.value;
+  const monthVal = document.getElementById("att-month").value;
+  const tbody = document.getElementById("att-history-body");
+
+  currentAttendanceRows = [];
+  currentAttendanceEmployeeName = select.options[select.selectedIndex] ? select.options[select.selectedIndex].text : "";
+
+  if (!employeeId || !monthVal) {
+    tbody.innerHTML = '<tr><td colspan="3" class="hist-empty">社員を選択してください</td></tr>';
+    return;
+  }
+
+  const [y, m] = monthVal.split("-").map(Number);
+  const monthStart = new Date(y, m - 1, 1);
+  const monthEnd = new Date(y, m, 1);
+
+  const { data: logs, error } = await supabaseClient
+    .from("attendance_logs")
+    .select("type, created_at")
+    .eq("employee_id", employeeId)
+    .gte("created_at", monthStart.toISOString())
+    .lt("created_at", monthEnd.toISOString())
+    .order("created_at", { ascending: true });
+
+  if (error || !logs || logs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="hist-empty">この月の記録はありません</td></tr>';
+    return;
+  }
+
+  const byDate = {};
+  logs.forEach((log) => {
+    const d = new Date(log.created_at);
+    const key = d.toLocaleDateString("sv-SE");
+    if (!byDate[key]) byDate[key] = { in: null, out: null };
+    if (log.type === "in" && !byDate[key].in) byDate[key].in = d;
+    if (log.type === "out") byDate[key].out = d;
+  });
+
+  const days = ["日", "月", "火", "水", "木", "金", "土"];
+  currentAttendanceRows = Object.keys(byDate)
+    .sort()
+    .map((key) => {
+      const entry = byDate[key];
+      return {
+        date: key,
+        in: entry.in ? pad(entry.in.getHours()) + ":" + pad(entry.in.getMinutes()) : "",
+        out: entry.out ? pad(entry.out.getHours()) + ":" + pad(entry.out.getMinutes()) : "",
+        weekday: days[new Date(key).getDay()],
+      };
+    });
+
+  tbody.innerHTML = currentAttendanceRows
+    .map((r) => {
+      const dateLabel = r.date + "（" + r.weekday + "）";
+      return `<tr><td>${dateLabel}</td><td>${r.in || "-"}</td><td>${r.out || "-"}</td></tr>`;
+    })
+    .join("");
+}
+
+document.getElementById("att-csv-export").addEventListener("click", () => {
+  if (currentAttendanceRows.length === 0) {
+    alert("社員と対象月を選択し、記録がある状態でお試しください。");
+    return;
+  }
+  const monthVal = document.getElementById("att-month").value;
+  const lines = ["日付,出勤,退勤"];
+  currentAttendanceRows.forEach((r) => {
+    lines.push(`${r.date},${r.in},${r.out}`);
+  });
+  const csv = "\uFEFF" + lines.join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `勤怠_${currentAttendanceEmployeeName}_${monthVal}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
 
 async function refreshEditRequests() {
   const { data: rows, error } = await supabaseClient

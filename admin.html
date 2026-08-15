@@ -43,6 +43,27 @@
     </div>
 
     <div class="hist-card">
+      <h4>社員別の勤怠記録</h4>
+      <div class="card-body" style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;padding-bottom:0;">
+        <div class="field" style="max-width:220px;">
+          <label for="att-employee-select">社員</label>
+          <select id="att-employee-select" class="small-input" style="width:100%"></select>
+        </div>
+        <div class="field" style="max-width:160px;">
+          <label for="att-month">対象月</label>
+          <input type="month" id="att-month">
+        </div>
+        <button type="button" id="att-csv-export" class="btn-secondary">CSVでダウンロード</button>
+      </div>
+      <table>
+        <thead><tr><th>日付</th><th>出勤</th><th>退勤</th></tr></thead>
+        <tbody id="att-history-body">
+          <tr><td colspan="3" class="hist-empty">社員を選択してください</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hist-card">
       <h4>有給残日数の管理</h4>
       <table>
         <thead><tr><th>氏名</th><th>部署</th><th>付与日数</th><th>使用済み</th><th>残り</th><th></th></tr></thead>
