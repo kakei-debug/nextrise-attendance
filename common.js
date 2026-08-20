@@ -1,5 +1,5 @@
 // 認証必須ページ共通の初期化処理
-// (dashboard.html / leave.html / expenses.html / admin.html から読み込む)
+// (dashboard.html / expenses.html / admin.html から読み込む)
 
 async function initPage(activePage) {
   const { data: { session } } = await supabaseClient.auth.getSession();
@@ -11,7 +11,7 @@ async function initPage(activePage) {
 
   const { data: profile } = await supabaseClient
     .from("profiles")
-    .select("id, full_name, department, role, leave_granted_days")
+    .select("id, full_name, department, role")
     .eq("id", user.id)
     .single();
 

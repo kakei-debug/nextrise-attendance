@@ -30,9 +30,7 @@
     <nav id="nav-menu" class="nav-menu" hidden>
       <a href="dashboard.html" data-page="dashboard">勤怠打刻</a>
       <a href="edit-request.html" data-page="editrequest">打刻修正申請</a>
-      <a href="expenses.html" data-page="expenses">交通費申請</a>
-      <a href="leave.html" data-page="leave">有給申請</a>
-      <a href="admin.html" data-page="admin" id="nav-admin-link" hidden>管理メニュー</a>
+      <a href="expenses.html" data-page="expenses">交通費申請</a>      <a href="admin.html" data-page="admin" id="nav-admin-link" hidden>管理メニュー</a>
       <button id="logout-btn" class="nav-logout">ログアウト</button>
     </nav>
   </header>
@@ -69,16 +67,6 @@
         <thead><tr><th>日付</th><th>出勤</th><th>退勤</th></tr></thead>
         <tbody id="att-history-body">
           <tr><td colspan="3" class="hist-empty">社員を選択してください</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="hist-card">
-      <h4>有給残日数の管理</h4>
-      <table>
-        <thead><tr><th>氏名</th><th>部署</th><th>付与日数</th><th>使用済み</th><th>残り</th><th></th></tr></thead>
-        <tbody id="leave-balance-body">
-          <tr><td colspan="6" class="hist-empty">読み込み中...</td></tr>
         </tbody>
       </table>
     </div>

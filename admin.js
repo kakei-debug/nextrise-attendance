@@ -36,7 +36,6 @@ async function init() {
 
   await refreshEditRequests();
   await populateEmployeeSelect();
-  await refreshLeaveBalances();
   if (currentProfile.role === "admin") await refreshUserList();
 }
 
@@ -268,50 +267,6 @@ async function refreshEditRequests() {
   });
 }
 
-async function refreshLeaveBalances() {
-  const tbody = document.getElementById("leave-balance-body");
-
-  const [{ data: profiles, error: pErr }, { data: approved, error: lErr }] = await Promise.all([
-    supabaseClient.from("profiles").select("id, full_name, department, leave_granted_days").order("department"),
-    supabaseClient.from("leave_requests").select("employee_id, days").eq("status", "approved"),
-  ]);
-
-  if (pErr || !profiles || profiles.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="hist-empty">社員が見つかりません</td></tr>';
-    return;
-  }
-
-  const usedByEmployee = {};
-  (approved || []).forEach((r) => {
-    usedByEmployee[r.employee_id] = (usedByEmployee[r.employee_id] || 0) + Number(r.days);
-  });
-
-  tbody.innerHTML = profiles
-    .map((p) => {
-      const used = usedByEmployee[p.id] || 0;
-      const remaining = Number(p.leave_granted_days) - used;
-      return `<tr data-id="${p.id}">
-        <td>${p.full_name || "-"}</td>
-        <td>${p.department || "-"}</td>
-        <td><input type="number" min="0" step="1" class="small-input leave-granted-input" value="${p.leave_granted_days}"></td>
-        <td>${used}日</td>
-        <td>${remaining}日</td>
-        <td><button class="btn-secondary leave-save-btn">保存</button></td>
-      </tr>`;
-    })
-    .join("");
-
-  tbody.querySelectorAll(".leave-save-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const tr = btn.closest("tr");
-      const id = tr.dataset.id;
-      const value = Number(tr.querySelector(".leave-granted-input").value) || 0;
-      await supabaseClient.from("profiles").update({ leave_granted_days: value }).eq("id", id);
-      await refreshLeaveBalances();
-    });
-  });
-}
-
 async function refreshUserList() {
   const { data: rows, error } = await supabaseClient
     .from("profiles")
@@ -339,7 +294,6 @@ async function refreshUserList() {
       if (!confirm("この社員のプロフィールを削除します。よろしいですか？")) return;
       await supabaseClient.from("profiles").delete().eq("id", btn.dataset.id);
       await refreshUserList();
-      await refreshLeaveBalances();
     });
   });
 }
